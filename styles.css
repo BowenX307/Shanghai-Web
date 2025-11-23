@@ -1,0 +1,628 @@
+/* =========================================
+   1. Fonts & Variables
+   ========================================= */
+   @font-face {
+    font-family: 'Broadway';
+    /* 注意：如果字体文件不在 fonts 文件夹，
+       请改为 src: url('Broadway Regular.ttf') 
+    */
+    src: url('fonts/Broadway Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* Palette: 1930s Shanghai Art Deco */
+    --bg-paper: #f4f1ea;          /* Aged Paper */
+    --ink-black: #2c2c2c;         /* Soft Black */
+    --shanghai-red: #8E2020;      /* Deep Burgundy/Lacquer Red */
+    --vintage-gold: #C5A059;      /* Muted Gold */
+    --frame-border: #d4d0c7;
+    
+    /* Typography */
+    --font-display: 'Broadway', cursive;
+    --font-serif-en: 'Playfair Display', serif;
+    --font-serif-cn: 'Noto Serif SC', serif;
+    --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* =========================================
+   2. Global Reset & Texture
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-paper);
+    color: var(--ink-black);
+    font-family: var(--font-serif-en);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Noise Filter via SVG Data URI for Texture */
+.background-texture {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.main-wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    z-index: 1;
+}
+
+/* =========================================
+   3. Header (The Marquee)
+   ========================================= */
+.archive-header {
+    margin-bottom: 40px;
+    padding: 20px 0;
+    position: relative;
+}
+
+.title-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.title-vertical-line {
+    width: 3px;
+    height: 140px;
+    background-color: var(--shanghai-red);
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.title-content {
+    flex: 1;
+}
+
+.title {
+    font-family: var(--font-display), serif; /* Fallback added */
+    font-size: 5.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 10px 0;
+    color: #111;
+    text-align: left;
+    line-height: 1.1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.subtitle-en {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+/* 标题动画类 */
+.title.animate-in,
+.subtitle-en.animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.title.animate-out,
+.subtitle-en.animate-out {
+    opacity: 0 !important;
+    transform: translateY(-30px) !important;
+}
+
+.subtitle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+}
+
+.subtitle-en {
+    font-family: var(--font-display), serif;
+    font-style: normal;
+    font-size: 1.2rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.subtitle-cn {
+    font-family: var(--font-serif-cn);
+    font-weight: 300;
+    letter-spacing: 4px;
+    font-size: 1rem;
+    color: var(--shanghai-red);
+}
+
+/* Art Deco Decorative Lines */
+.header-border-top,
+.header-border-bottom {
+    height: 3px;
+    background-color: #111;
+    width: 100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.header-border-top::before, .header-border-bottom::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: -20px;
+    width: 140px;
+    height: 1px;
+    background-color: var(--vintage-gold);
+}
+
+/* =========================================
+   4. The Exhibit (Map Frame) - FIXES APPLIED
+   ========================================= */
+.exhibit-container {
+    margin-bottom: 40px;
+}
+
+.juxtapose-frame {
+    /* FIX: 确保容器在图片加载前有高度，防止页面跳动 */
+    min-height: 500px; 
+    aspect-ratio: 16/9; /* 匹配图片实际比例 3193x1796 */
+    width: 100%;
+    
+    border: 8px solid #fff;
+    border-bottom: 8px solid #fff; /* 确保下边框宽度一致 */
+    outline: 1px solid var(--frame-border);
+    position: relative;
+    background: transparent; /* 改为透明，避免灰色背景 */
+    overflow: hidden; /* 防止内容溢出边框 */
+    padding: 0;
+    margin: 0;
+}
+
+.exhibit-caption {
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* JuxtaposeJS Overrides */
+.juxtapose-frame .juxtapose {
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* 让 JuxtaposeJS 自己处理图片定位，不要强制覆盖 */
+.juxtapose-frame .juxtapose img {
+    display: block;
+}
+
+/* 确保 JuxtaposeJS 内部容器稳定，但不干扰其内部定位 */
+.juxtapose-frame .jx-knightlab {
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    /* 启用硬件加速，提升动画性能 */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* 移除 JuxtaposeJS 默认的灰色背景 */
+.juxtapose-frame .jx-knightlab .jx-image {
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    /* 优化图片渲染性能 */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.juxtapose-frame .jx-knightlab .jx-image img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    /* 优化图片动画性能 */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* JuxtaposeJS 标签样式 - 使用更强的选择器确保覆盖 */
+.juxtapose-frame .jx-knightlab div.jx-image div.jx-label,
+.jx-knightlab div.jx-image div.jx-label,
+div.jx-image div.jx-label,
+.juxtapose-frame div.jx-label {
+    font-family: var(--font-display), 'Broadway', cursive !important;
+    background-color: #f4f1ea !important;
+    background: #f4f1ea !important;
+    color: #000 !important;
+    opacity: 1 !important;
+    border-radius: 0 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 确保标签内的所有文字都是黑色 */
+.juxtapose-frame .jx-knightlab div.jx-image div.jx-label *,
+.jx-knightlab div.jx-image div.jx-label *,
+div.jx-image div.jx-label *,
+.juxtapose-frame div.jx-label * {
+    color: #000 !important;
+}
+
+.jx-controller {
+    background-color: var(--shanghai-red) !important;
+}
+
+/* =========================================
+   5. Control Panel & Narrative Card
+   ========================================= */
+.control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 左侧栏 + 右侧内容 */
+    gap: 40px;
+    align-items: start;
+    margin-top: 0;
+}
+
+
+/* Regions Container - 长栏样式 */
+.regions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.regions-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.regions-title-line {
+    width: 3px;
+    height: 40px;
+    background-color: var(--shanghai-red);
+    flex-shrink: 0;
+}
+
+.regions-title {
+    font-family: var(--font-display), 'Broadway', cursive;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #111;
+    margin: 0;
+}
+
+.region-bar {
+    width: 100%;
+    padding: 25px 30px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 为选中的 tab 添加前面的红线 */
+.region-bar.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--shanghai-red);
+    z-index: 1;
+}
+
+/* 其他 tab 初始状态：隐藏在上方 */
+.region-bar:not(:first-child) {
+    opacity: 0;
+    transform: translateY(-30px);
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    border: none;
+}
+
+/* 第一个 tab 默认显示 - 放在后面确保优先级 */
+.regions-container .region-bar:first-child,
+.region-bar:first-child {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    max-height: none !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    overflow: visible !important;
+    visibility: visible !important;
+}
+
+/* 展开动画 */
+.region-bar.animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    max-height: 200px !important;
+    margin-top: 15px !important;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                max-height 1s cubic-bezier(0.4, 0, 0.2, 1),
+                margin-top 1s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 1s cubic-bezier(0.4, 0, 0.2, 1),
+                border 1s ease;
+}
+
+.region-bar:hover {
+    background: #f9f9f9;
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.region-bar.active {
+    width: 280px !important;
+    background: #fff;
+    border-left: 4px solid var(--shanghai-red);
+    transform: translateX(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.region-bar:not(.active) {
+    width: 100%;
+}
+
+.region-name {
+    font-family: var(--font-serif-en);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ink-black);
+    display: block;
+    transition: all 0.6s ease;
+    white-space: nowrap;
+}
+
+.region-bar.active .region-name {
+    font-size: 1.1rem;
+}
+
+/* Narrative Card (The Paper Note) */
+.narrative-card {
+    background: #fff;
+    padding: 40px;
+    position: relative;
+    border-top: 4px solid var(--ink-black);
+    min-height: 300px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 1s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0;
+    align-self: start;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+.narrative-card.animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    max-height: 2000px !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+    overflow: visible !important;
+}
+
+/* =========================================
+   6. Black Section (新页面区域)
+   ========================================= */
+.black-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #1a1a1a; /* 带灰度的黑色 */
+    position: relative;
+    opacity: 0;
+    transform: translateY(150px);
+    transition: opacity 1.5s ease-out, transform 1.5s cubic-bezier(0.2, 0, 0.1, 1); /* 先慢后快 */
+    margin-top: 120px; /* 增加间距，让两者分开 */
+    z-index: 1;
+}
+
+.black-section.animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.black-section.animate-out {
+    opacity: 0 !important;
+    transform: translateY(150px) !important;
+    transition: opacity 1.5s ease-out, transform 1.5s cubic-bezier(0.2, 0, 0.1, 1); /* 退出时也是先慢后快 */
+}
+
+.black-section-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    color: #fff;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Falling Text Styles */
+.falling-text-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.falling-text-target {
+    display: inline-block;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.falling-text-target .word {
+    display: inline-block;
+    margin: 0 5px;
+    user-select: none;
+    white-space: nowrap;
+    position: relative;
+}
+
+.falling-text-target .word .char {
+    display: inline-block;
+    transition: opacity 0.15s ease-in;
+}
+
+.falling-text-target .word.highlighted {
+    color: #b04040; /* 稍微亮一点的红色 */
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(176, 64, 64, 0.5);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .falling-text-target {
+        max-width: 90%;
+        padding-top: 100px !important;
+        font-size: 1.25rem !important;
+    }
+}
+
+/* The "Stamp" effect */
+.card-stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: 2px solid var(--vintage-gold);
+    color: var(--vintage-gold);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    font-family: var(--font-sans);
+    letter-spacing: 2px;
+    transform: rotate(-10deg);
+    opacity: 0.6;
+}
+
+.narrative-content h2 {
+    font-family: var(--font-serif-en);
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--ink-black);
+}
+
+.narrative-content p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.narrative-text-cn, 
+.narrative-content .citation, 
+.narrative-content .quote {
+    font-family: var(--font-serif-cn);
+}
+
+.quote {
+    border-left: 3px solid var(--vintage-gold);
+    padding-left: 20px;
+    margin: 30px 0;
+    font-style: italic;
+    color: #555;
+    font-size: 1.2rem;
+    background: rgba(197, 160, 89, 0.05); /* Light Gold BG */
+    padding: 15px 20px;
+}
+
+.citation {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 10px;
+    display: block;
+    text-align: right;
+}
+
+/* =========================================
+   6. Mobile Responsiveness
+   ========================================= */
+@media (max-width: 768px) {
+    .title { font-size: 3rem; }
+    .title-vertical-line {
+        height: 60px;
+    }
+    
+    .control-panel {
+        grid-template-columns: 1fr; /* Stack vertically */
+    }
+    
+    .region-bar {
+        width: 100% !important;
+        padding: 20px 25px;
+    }
+    
+    .region-bar.active {
+        width: 100% !important;
+        border-left: none;
+        border-top: 4px solid var(--shanghai-red);
+    }
+    
+    .region-name {
+        font-size: 1.1rem;
+    }
+    
+    .region-bar.active .region-name {
+        font-size: 1rem;
+    }
+}

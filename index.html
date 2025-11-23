@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unveiling Shanghai</title>
+    <meta name="description" content="Pudong Unveiled: A Juxtaposed Map of Memory">
+    
+    <!-- 1. JuxtaposeJS CSS -->
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/juxtapose/latest/css/juxtapose.css">
+    
+    <!-- React & ReactDOM for Falling Text -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Matter.js (Physics Engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    
+    <!-- 2. Google Fonts (备用网络字体) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- 3. 自定义样式 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 背景纹理 -->
+    <div class="background-texture"></div>
+
+    <div class="main-wrapper">
+        <!-- 顶部标题区 -->
+        <header class="archive-header">
+            <div class="title-wrapper">
+                <div class="title-vertical-line"></div>
+                <div class="title-content">
+                    <h1 class="title">Unveiling Shanghai</h1>
+                    <div class="subtitle-group">
+                        <p class="subtitle-en">A Juxtaposed Archive of Memory</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 地图展示区 -->
+        <div class="exhibit-container">
+            <!-- 
+               注意：这里添加了 style="min-height..." 作为防塌陷保护 
+               Juxtapose 会自动替换这个 div 内部的内容
+            -->
+            <div id="juxtapose-wrapper" class="juxtapose-frame">
+                <div class="juxtapose" data-startingposition="50" data-showlabels="true" data-showcredits="false" data-animate="true">
+                    <!-- 
+                        请确保 images 文件夹内有这两个文件，且文件名完全一致（包括大小写）
+                    -->
+                    <img src="images/shanghainew.png" data-label="2024 Modern Shanghai" alt="New Shanghai Map" />
+                    <img src="images/shanghaiold.png" data-label="1980s Old Shanghai" alt="Old Shanghai Map" />
+                </div>
+            </div>
+            <p class="exhibit-caption">Figure 1. The transformation of urban fabric (1980s - Present)</p>
+        </div>
+
+        <!-- 控制面板与叙事卡片 -->
+        <div class="control-panel">
+            <!-- 左侧：区域选择栏 -->
+            <div class="regions-container">
+                <div class="regions-title-wrapper">
+                    <div class="regions-title-line"></div>
+                    <h3 class="regions-title">Explore</h3>
+                </div>
+                <div class="region-bar" data-region="facade">
+                    <span class="region-name">The Facade</span>
+                </div>
+                <div class="region-bar" data-region="lost-identities">
+                    <span class="region-name">Lost Identities</span>
+                </div>
+                <div class="region-bar" data-region="nice-apartment-trap">
+                    <span class="region-name">The "Nice Apartment" Trap</span>
+                </div>
+                <div class="region-bar" data-region="concrete-vs-community">
+                    <span class="region-name">Concrete vs. Community</span>
+                </div>
+            </div>
+
+            <!-- 右侧：叙事档案卡 -->
+            <div class="narrative-card">
+                <div class="card-stamp">ARCHIVE</div>
+                <div id="narrative-content" class="narrative-content">
+                    <div class="narrative-default">
+                        <h2>Trace the Shifts</h2>
+                        <p class="narrative-text">Glide across the map to peel back the concrete skyline.</p>
+                        <p class="narrative-text">Beneath the steel and concrete, discover the hidden memories of the city.</p>
+                        <p style="margin-top: 20px; font-size: 0.9em; color: #888;">(Click on a region below to explore)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新的黑色页面区域 -->
+    <div class="black-section">
+        <div class="black-section-content">
+            <div id="falling-text-root"></div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
