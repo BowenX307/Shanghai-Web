@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCustomCursor();
     setupGlitchEffect();
     setupLandmarks();
-    setupLandmarkTab();
 });
 
 // 强制应用 JuxtaposeJS 标签样式
@@ -1016,29 +1015,3 @@ function setupLandmarks() {
 });
 }
 
-// ============================================================================
-// Landmark Tab Interaction
-// ============================================================================
-
-function setupLandmarkTab() {
-    const tabs = document.querySelectorAll('.landmark-tab');
-    
-    tabs.forEach(tab => {
-        const tabId = tab.getAttribute('data-tab');
-        const content = document.querySelector(`.landmark-tab-content[data-content="${tabId}"]`);
-        
-        if (!content) return;
-        
-        tab.addEventListener('click', () => {
-            const isActive = tab.classList.contains('active');
-            
-            if (isActive) {
-                tab.classList.remove('active');
-                content.classList.remove('active');
-            } else {
-                tab.classList.add('active');
-                content.classList.add('active');
-            }
-        });
-    });
-}

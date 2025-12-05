@@ -1357,3 +1357,230 @@ div.jx-image div.jx-label *,
     background-color: #8E2020;
     color: #fff;
 }
+
+/* =========================================
+   16. Landmark Reveal Component (Juxtaposition/Reveal)
+   ========================================= */
+
+/* UNVEIL Button */
+.landmark-reveal-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--vintage-gold);
+    color: var(--vintage-gold);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.landmark-reveal-btn:hover {
+    background: var(--vintage-gold);
+    color: #000;
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.6);
+    transform: translateY(-2px);
+}
+
+.reveal-btn-text {
+    display: block;
+}
+
+/* State A: Modern/Neon Style (Default) */
+.landmark-card {
+    --landmark-theme: #d97706;
+}
+
+.landmark-card .landmark-name {
+    color: var(--ink-black);
+    text-shadow: none;
+}
+
+.landmark-card .landmark-desc {
+    color: var(--ink-black);
+}
+
+/* State B: Archive/Cyberpunk Style */
+.landmark-card.glitch-active {
+    position: relative;
+}
+
+.landmark-card.glitch-active .landmark-text {
+    font-family: 'Courier Prime', 'Courier New', 'Courier', monospace;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border: 1px solid var(--landmark-theme, #0ff);
+    box-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.3),
+        inset 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.landmark-card.glitch-active .landmark-name {
+    color: var(--landmark-theme, #0ff);
+    text-shadow: 
+        0 0 10px var(--landmark-theme, #0ff),
+        0 0 20px var(--landmark-theme, #0ff);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    letter-spacing: 3px;
+    font-size: 1.8rem;
+}
+
+.landmark-card.glitch-active .landmark-desc {
+    color: #0ff;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    text-align: left;
+    opacity: 0;
+    animation: typewriter 1.5s ease-in-out 0.5s forwards;
+}
+
+.landmark-card.glitch-active .landmark-year {
+    color: var(--landmark-theme, #0ff);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    filter: drop-shadow(0 0 5px var(--landmark-theme, #0ff));
+}
+
+.landmark-card.glitch-active .year-separator {
+    color: var(--landmark-theme, #0ff);
+    filter: drop-shadow(0 0 5px var(--landmark-theme, #0ff));
+}
+
+.landmark-card.glitch-active .landmark-image-container {
+    filter: grayscale(0.3) contrast(1.2) brightness(0.9);
+    border-color: var(--landmark-theme, #0ff);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+}
+
+.landmark-card.glitch-active .landmark-status {
+    color: var(--landmark-theme, #0ff);
+    text-shadow: 0 0 10px var(--landmark-theme, #0ff);
+}
+
+/* Quote styling for State B */
+.landmark-quote {
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 3px solid var(--landmark-theme, #0ff);
+    color: var(--landmark-theme, #0ff);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-style: italic;
+    font-size: 0.85rem;
+    opacity: 0;
+    animation: typewriter 1s ease-in-out 2s forwards;
+    background: rgba(0, 255, 255, 0.05);
+}
+
+/* Glitch Animation */
+.landmark-card.glitch-transition {
+    animation: glitch 0.3s ease-in-out;
+}
+
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    10% {
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    20% {
+        transform: translate(-1px, 0px);
+        filter: hue-rotate(180deg);
+    }
+    30% {
+        transform: translate(3px, 2px);
+        filter: hue-rotate(270deg);
+    }
+    40% {
+        transform: translate(1px, -1px);
+        filter: hue-rotate(360deg);
+    }
+    50% {
+        transform: translate(-1px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    60% {
+        transform: translate(-3px, 1px);
+        filter: hue-rotate(180deg);
+    }
+    70% {
+        transform: translate(2px, 1px);
+        filter: hue-rotate(270deg);
+    }
+    80% {
+        transform: translate(-1px, -1px);
+        filter: hue-rotate(360deg);
+    }
+    90% {
+        transform: translate(1px, 2px);
+        filter: hue-rotate(90deg);
+    }
+}
+
+/* Typewriter Effect */
+@keyframes typewriter {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Additional Cyberpunk Effects */
+.landmark-card.glitch-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 255, 0.03) 2px,
+            rgba(0, 255, 255, 0.03) 4px
+        );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.landmark-card.glitch-active .landmark-text::after {
+    content: '_';
+    color: var(--landmark-theme, #0ff);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 968px) {
+    .landmark-reveal-btn {
+        padding: 10px 20px;
+        font-size: 0.7rem;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .landmark-card.glitch-active .landmark-text {
+        padding: 20px;
+    }
+    
+    .landmark-card.glitch-active .landmark-name {
+        font-size: 1.5rem;
+    }
+}
