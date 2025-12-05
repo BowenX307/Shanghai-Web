@@ -43,6 +43,7 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
+    cursor: none; /* 隐藏默认光标，使用自定义光标 */
 }
 
 /* Noise Filter via SVG Data URI for Texture */
@@ -58,6 +59,7 @@ body {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
+
 .main-wrapper {
     position: relative;
     max-width: 1200px;
@@ -70,7 +72,7 @@ body {
    3. Header (The Marquee)
    ========================================= */
 .archive-header {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     padding: 20px 0;
     position: relative;
 }
@@ -94,7 +96,7 @@ body {
 }
 
 .title {
-    font-family: var(--font-display), serif; /* Fallback added */
+    font-family: var(--font-display), serif;
     font-size: 5.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -174,7 +176,7 @@ body {
    4. The Exhibit (Map Frame) - FIXES APPLIED
    ========================================= */
 .exhibit-container {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .juxtapose-frame {
@@ -284,6 +286,19 @@ div.jx-image div.jx-label *,
 
 .jx-controller {
     background-color: var(--shanghai-red) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(142, 32, 32, 0.3) !important;
+    cursor: grab !important;
+}
+
+.jx-controller:active {
+    cursor: grabbing !important;
+    box-shadow: 0 4px 12px rgba(142, 32, 32, 0.5) !important;
+}
+
+.juxtapose-frame:hover .jx-controller {
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 16px rgba(142, 32, 32, 0.4) !important;
 }
 
 /* =========================================
@@ -294,7 +309,7 @@ div.jx-image div.jx-label *,
     grid-template-columns: 1fr 1fr; /* 左侧栏 + 右侧内容 */
     gap: 40px;
     align-items: start;
-    margin-top: 0;
+    margin-top: 5px;
 }
 
 
@@ -324,7 +339,7 @@ div.jx-image div.jx-label *,
 
 .regions-title {
     font-family: var(--font-display), 'Broadway', cursive;
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #111;
@@ -491,6 +506,112 @@ div.jx-image div.jx-label *,
     color: #fff;
     position: relative;
     min-height: 100vh;
+    padding-bottom: 120px; /* 为地板留出空间 */
+    z-index: 1; /* 确保内容在网格背景之上 */
+}
+
+
+/* =========================================
+   8. Footer Info (个人信息和参考文献)
+   ========================================= */
+.footer-info {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 40px 60px 40px; /* 减少顶部padding，让署名更靠近地板 */
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: opacity 1s ease-out, transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footer-info.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.author-info {
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.author-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+    font-family: var(--font-serif-en);
+}
+
+.author-email {
+    font-size: 0.95rem;
+    color: #aaa;
+    font-family: var(--font-sans);
+}
+
+.references-section {
+    margin-top: 40px;
+}
+
+.references-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 25px;
+    font-family: var(--font-serif-en);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.references-list {
+    list-style: decimal;
+    padding-left: 25px;
+    margin: 0;
+    color: #ccc;
+    font-family: var(--font-serif-en);
+}
+
+.references-list li {
+    margin-bottom: 20px;
+    padding-left: 10px;
+    line-height: 1.7;
+    font-size: 0.9rem;
+}
+
+.references-list li em {
+    font-style: italic;
+    color: #ddd;
+}
+
+.references-list li a {
+    color: #999;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(153, 153, 153, 0.3);
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.references-list li a:hover {
+    color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .footer-info {
+        padding: 30px 20px 60px 20px; /* 减少顶部padding，与桌面版保持一致 */
+        font-size: 0.85rem;
+    }
+    
+    .references-list {
+        padding-left: 20px;
+    }
+    
+    .references-list li {
+        margin-bottom: 15px;
+        font-size: 0.85rem;
+    }
 }
 
 /* Falling Text Styles */
@@ -504,6 +625,12 @@ div.jx-image div.jx-label *,
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    touch-action: pan-y; /* 允许垂直滚动 */
+    overflow: visible; /* 确保不阻止滚动 */
+}
+
+.falling-text-container .falling-text-target {
+    pointer-events: auto; /* 文字区域可以交互 */
 }
 
 .falling-text-target {
@@ -595,7 +722,347 @@ div.jx-image div.jx-label *,
 }
 
 /* =========================================
-   6. Mobile Responsiveness
+   6. Landmarks Section (地标对比区域)
+   ========================================= */
+.landmarks-section {
+    margin-top: 60px;
+    padding: 40px 20px 60px 20px;
+    position: relative;
+    background: linear-gradient(to bottom, transparent, rgba(244, 241, 234, 0.5), transparent);
+    }
+
+.landmarks-header {
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--ink-black);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.landmarks-title-line {
+    width: 4px;
+    height: 60px;
+    background-color: var(--shanghai-red);
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.landmarks-title-content {
+    flex: 1;
+}
+
+.landmarks-title {
+    font-family: var(--font-display), serif;
+    font-size: 3.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--ink-black);
+    margin-bottom: 15px;
+    line-height: 1.1;
+}
+
+.landmarks-subtitle {
+    font-family: var(--font-display), serif;
+    font-size: 1.1rem;
+    color: #666;
+    font-style: normal;
+}
+
+.landmark-card {
+    margin-bottom: 100px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.landmark-card.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.landmark-number {
+    position: absolute;
+    right: 0;
+    top: -40px;
+    font-size: 12rem;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.05);
+    font-family: var(--font-display), serif;
+    line-height: 1;
+    z-index: 0;
+    transition: transform 0.1s linear;
+}
+
+.landmark-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.landmark-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 6px solid #fff;
+    outline: 1px solid var(--frame-border);
+    cursor: none;
+    background: #000;
+    transform: scale(0.85);
+    transform-origin: center;
+}
+
+.landmark-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.landmark-image.modern {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    filter: grayscale(0);
+}
+
+.landmark-image.old {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    filter: grayscale(1) sepia(0.4) contrast(1.1);
+    opacity: 0.95;
+}
+
+.landmark-image.old::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        url('https://www.transparenttextures.com/patterns/black-felt.png'),
+        rgba(0, 0, 0, 0.1);
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+}
+
+.landmark-image-container:hover .landmark-image.modern {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.landmark-image-container:hover .landmark-image.old {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+}
+
+.landmark-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    mix-blend-mode: difference;
+}
+
+.landmark-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.landmark-image-container:hover .status-text {
+    animation: scanning 0.3s ease;
+}
+
+@keyframes scanning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.landmark-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--shanghai-red);
+    transform-origin: left;
+    transition: width 0.5s ease;
+}
+
+.landmark-image-container:hover .landmark-progress {
+    width: 100%;
+}
+
+.landmark-text {
+    padding-left: 0;
+}
+
+.landmark-year {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-family: var(--font-display), serif;
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--ink-black);
+}
+
+.year-old {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.landmark-image-container:hover ~ .landmark-text .year-old {
+    opacity: 0.6;
+}
+
+.year-separator {
+    font-size: 1.5rem;
+    color: var(--shanghai-red);
+}
+
+.year-new {
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.landmark-image-container:hover ~ .landmark-text .year-new {
+    opacity: 1;
+}
+
+.landmark-name {
+    font-family: var(--font-display), serif;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    color: var(--ink-black);
+}
+
+.landmark-detail {
+    font-family: var(--font-serif-cn);
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.landmark-desc {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1rem;
+    color: var(--ink-black);
+    line-height: 1.6;
+    font-style: normal;
+}
+
+/* Landmark Tab Section */
+.landmark-tab-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.landmark-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 40px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.landmark-tab:hover {
+    background: #f9f9f9;
+    border-color: var(--shanghai-red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.landmark-tab-text {
+    font-family: var(--font-display), serif;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--ink-black);
+}
+
+.landmark-tab-icon {
+    font-size: 0.8rem;
+    color: var(--shanghai-red);
+    transition: transform 0.3s ease;
+}
+
+.landmark-tab.active .landmark-tab-icon {
+    transform: rotate(180deg);
+}
+
+.landmark-tab-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s ease;
+    padding: 0 20px;
+}
+
+.landmark-tab-content.active {
+    max-height: 500px;
+    padding: 30px 20px;
+}
+
+.landmark-tab-content-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: var(--font-serif-en), serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--ink-black);
+    text-align: center;
+}
+
+/* 响应式设计 - 地标区域 */
+@media (max-width: 968px) {
+    .landmark-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .landmark-image-container {
+        aspect-ratio: 4 / 3;
+    }
+    
+    .landmark-text {
+        padding-left: 0;
+    }
+    
+    .landmark-year {
+        font-size: 3rem;
+    }
+    
+    .landmark-name {
+        font-size: 2rem;
+    }
+    
+    .landmark-number {
+        font-size: 8rem;
+        top: -20px;
+    }
+}
+
+/* =========================================
+   7. Mobile Responsiveness
    ========================================= */
 @media (max-width: 768px) {
     .title { font-size: 3rem; }
@@ -625,4 +1092,268 @@ div.jx-image div.jx-label *,
     .region-bar.active .region-name {
         font-size: 1rem;
     }
+}
+
+/* =========================================
+   9. Custom Cursor (自定义光标)
+   ========================================= */
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: difference;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.1s ease-out;
+}
+
+.custom-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    transition: all 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-cursor-ring::before,
+.custom-cursor-ring::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 120%;
+    background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+.custom-cursor-ring::before {
+    transform: rotate(45deg);
+}
+
+.custom-cursor-ring::after {
+    transform: rotate(-45deg);
+}
+
+.custom-cursor-ring.click {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+}
+
+/* =========================================
+   10. Glitch Text Effect (故障文字效果)
+   ========================================= */
+.glitch-text {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    clip-path: inset(0 0 0 0);
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -1px 0 #0ff;
+    clip-path: inset(44px 0 56px 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    left: -2px;
+    text-shadow: 1px 0 #f0f;
+    clip-path: inset(44px 0 56px 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip-path: inset(31px 0 94px 0); }
+    20% { clip-path: inset(6px 0 14px 0); }
+    40% { clip-path: inset(82px 0 16px 0); }
+    60% { clip-path: inset(13px 0 86px 0); }
+    80% { clip-path: inset(55px 0 2px 0); }
+    100% { clip-path: inset(41px 0 66px 0); }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip-path: inset(11px 0 64px 0); }
+    20% { clip-path: inset(86px 0 4px 0); }
+    40% { clip-path: inset(12px 0 56px 0); }
+    60% { clip-path: inset(43px 0 26px 0); }
+    80% { clip-path: inset(25px 0 92px 0); }
+    100% { clip-path: inset(61px 0 16px 0); }
+}
+
+/* 标题故障效果（可选，更微妙） */
+.title.glitch-enabled {
+    position: relative;
+}
+
+.title.glitch-enabled::before,
+.title.glitch-enabled::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.title.glitch-enabled:hover::before {
+    opacity: 0.3;
+    left: 1px;
+    color: #0ff;
+    animation: glitch-flicker 0.3s ease;
+}
+
+.title.glitch-enabled:hover::after {
+    opacity: 0.3;
+    left: -1px;
+    color: #f0f;
+    animation: glitch-flicker 0.3s ease 0.1s;
+    }
+
+@keyframes glitch-flicker {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.3; }
+}
+
+/* =========================================
+   11. Cyber Grid Animation (赛博网格动画)
+   ========================================= */
+.cyber-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(#0ff 1px, transparent 1px),
+        linear-gradient(90deg, #0ff 1px, transparent 1px);
+    background-size: 80px 80px;
+    transform: perspective(1000px) rotateX(60deg) translateY(-100px) scale(2);
+    filter: drop-shadow(0 0 5px #0ff);
+    animation: grid-drift 20s linear infinite;
+}
+
+@keyframes grid-drift {
+    0% { transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(0) scale(2); }
+    100% { transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(100px) scale(2); }
+}
+
+/* 黑色区域的网格背景 */
+.black-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+}
+
+/* =========================================
+   12. Scrollbar Styling (滚动条美化)
+   ========================================= */
+::-webkit-scrollbar {
+    width: 6px;
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8E2020; /* 使用项目主题色 */
+}
+
+/* 在浅色背景区域使用不同的滚动条颜色 */
+.main-wrapper::-webkit-scrollbar {
+    background: var(--bg-paper);
+}
+
+.main-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(142, 32, 32, 0.3);
+}
+
+.main-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--shanghai-red);
+}
+
+/* =========================================
+   13. Cyber Data Stream Effect (数据流效果)
+   ========================================= */
+.data-stream {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to top, rgba(0, 255, 255, 0.1), transparent);
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.data-stream::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0ff, transparent);
+    animation: data-flow 3s linear infinite;
+}
+
+@keyframes data-flow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* =========================================
+   14. Vertical Writing Mode (垂直排版)
+   ========================================= */
+.writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+/* =========================================
+   15. Selection Styling (选中文本样式)
+   ========================================= */
+::selection {
+    background-color: #8E2020;
+    color: #fff;
+}
+
+::-moz-selection {
+    background-color: #8E2020;
+    color: #fff;
 }

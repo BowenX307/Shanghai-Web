@@ -59,9 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setupInteractions();
     setupMapListeners();
     setupJuxtaposeLabels();
+    setupJuxtaposeSliderEffects();
     setupTitleScrollAnimation();
     setupTabsScrollAnimation();
     setupBlackSectionAnimation();
+    setupCustomCursor();
+    setupGlitchEffect();
+    setupLandmarks();
+    setupLandmarkTab();
 });
 
 // 强制应用 JuxtaposeJS 标签样式
@@ -113,6 +118,54 @@ function setupJuxtaposeLabels() {
 }
 
 // ============================================================================
+// Juxtapose Slider Effects (为 slider 添加动效)
+// ============================================================================
+
+function setupJuxtaposeSliderEffects() {
+    // 等待 JuxtaposeJS 初始化完成
+    setTimeout(() => {
+        const wrapper = document.getElementById('juxtapose-wrapper');
+        if (!wrapper) return;
+        
+        // 查找 slider 控制器
+        const slider = wrapper.querySelector('.jx-controller');
+        if (!slider) {
+            // 如果还没初始化，再等一会儿
+            setTimeout(setupJuxtaposeSliderEffects, 500);
+            return;
+        }
+        
+        // 为 slider 添加悬停动效
+        wrapper.addEventListener('mouseenter', () => {
+            if (slider) {
+                slider.style.transform = 'scale(1.1)';
+                slider.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            }
+        });
+        
+        wrapper.addEventListener('mouseleave', () => {
+            if (slider) {
+                slider.style.transform = 'scale(1)';
+            }
+        });
+        
+        // 监听 slider 移动，添加平滑动画
+        const observer = new MutationObserver(() => {
+            if (slider) {
+                slider.style.transition = 'left 0.1s cubic-bezier(0.4, 0, 0.2, 1)';
+            }
+        });
+        
+        observer.observe(wrapper, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+    }, 1000);
+}
+
+// ============================================================================
 // Interaction Handlers
 // ============================================================================
 
@@ -123,7 +176,7 @@ function setupInteractions() {
         bar.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+    
             // 1. Visual State: Update active class
             regionBars.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
@@ -181,7 +234,7 @@ const FallingText = ({
             .join(' ');
         
         textRef.current.innerHTML = newHTML;
-        
+
         // Start Typing Loop - 逐字符显示，增强打字机效果
         const charSpans = textRef.current.querySelectorAll('.char');
         let currentIndex = 0;
@@ -191,10 +244,10 @@ const FallingText = ({
             if (currentIndex >= charSpans.length) {
                 clearInterval(typeInterval);
                 
-                // Wait 1.5 seconds after typing finishes
+                // Wait 0.6 seconds after typing finishes
                 setTimeout(() => {
                     setEffectStarted(true);
-                }, 1500); 
+                }, 600); 
                 return;
             }
             
@@ -226,9 +279,39 @@ const FallingText = ({
             render: { fillStyle: 'transparent' }
         };
         
-        const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
+        // 计算地板位置：在署名上方
+        const calculateFloorPosition = () => {
+            const footerInfo = document.querySelector('.footer-info');
+            let floorY = height - 100; // 默认位置
+            
+            if (footerInfo && containerRef.current) {
+                const footerRect = footerInfo.getBoundingClientRect();
+                const containerRect = containerRef.current.getBoundingClientRect();
+                // 计算署名相对于容器的位置，地板放在署名上方-6px（署名上移）
+                const relativeFooterTop = footerRect.top - containerRect.top;
+                if (relativeFooterTop > 0 && relativeFooterTop < height) {
+                    floorY = relativeFooterTop - 6; // 负距离，署名上移6px
+                }
+            }
+            return floorY;
+        };
+        
+        // 初始计算地板位置
+        let floorY = calculateFloorPosition();
+        
+        // 创建地板
+        const floor = Bodies.rectangle(width / 2, floorY, width, 10, boundaryOptions);
         const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
         const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
+        
+        // 延迟更新地板位置，确保DOM已渲染
+        setTimeout(() => {
+            const newFloorY = calculateFloorPosition();
+            if (newFloorY !== floorY) {
+                Matter.Body.setPosition(floor, { x: width / 2, y: newFloorY });
+                floorY = newFloorY;
+            }
+        }, 500);
         
         // 获取所有词元素用于物理引擎（每个词作为一个整体掉落）
         const wordSpans = textRef.current.querySelectorAll('.word');
@@ -264,6 +347,21 @@ const FallingText = ({
             }
         });
         
+        // 确保滚动事件不被阻止
+        if (containerRef.current) {
+            // 允许滚轮事件穿透
+            containerRef.current.style.touchAction = 'pan-y';
+            
+            // 监听滚轮事件，确保不阻止默认行为
+            const handleWheel = (e) => {
+                // 允许页面滚动
+                return true;
+            };
+            
+            containerRef.current.addEventListener('wheel', handleWheel, { passive: true });
+            containerRef.current.addEventListener('touchmove', handleWheel, { passive: true });
+        }
+        
         World.add(engine.world, [
             floor, leftWall, rightWall, 
             mouseConstraint, 
@@ -285,11 +383,33 @@ const FallingText = ({
         Events.on(engine, 'afterUpdate', updateDom);
         Runner.run(runner, engine);
         
+        // 在文字掉落完成后（约3秒后），禁用鼠标约束以允许页面滚动
+        setTimeout(() => {
+            if (mouseConstraint && engine.world) {
+                // 禁用鼠标约束，允许页面滚动
+                mouseConstraint.mouse.element = null;
+                // 或者完全移除约束
+                try {
+                    World.remove(engine.world, mouseConstraint);
+                } catch (e) {
+                    // 忽略错误
+                }
+            }
+        }, 3000); // 3秒后禁用鼠标约束
+        
         return () => {
             Runner.stop(runner);
             Events.off(engine, 'afterUpdate', updateDom);
             World.clear(engine.world);
             Engine.clear(engine);
+            // 清理鼠标约束
+            if (mouseConstraint && engine.world) {
+                try {
+                    World.remove(engine.world, mouseConstraint);
+                } catch (e) {
+                    // 忽略错误
+                }
+            }
         };
     }, [effectStarted, gravity, mouseConstraintStiffness]);
 
@@ -333,6 +453,20 @@ function initFallingText() {
         "identity", "social", "fabric", "urbanization"
     ];
     
+    // 计算文字掉落完成的时间，总时间约6秒
+    // 打字完成后等待0.6秒，然后物理引擎开始
+    // 文字掉落需要约1.5秒
+    // 剩余时间用于打字：6 - 0.6 - 1.5 = 3.9秒
+    const targetTotalTime = 6000; // 6秒
+    const waitAfterTyping = 600; // 0.6秒
+    const fallingTime = 1500; // 文字掉落约1.5秒
+    const typingTime = targetTotalTime - waitAfterTyping - fallingTime; // 约3.9秒
+    
+    // 根据文字长度和打字时间计算打字速度
+    const textLength = summaryText.length;
+    const charDelay = typingTime / textLength; // 每个字符的延迟时间
+    const typingSpeed = charDelay * 3; // typingSpeed / 3 = charDelay
+    
     try {
         const root = window.ReactDOM.createRoot(fallingTextRoot);
         root.render(window.React.createElement(FallingText, {
@@ -341,8 +475,16 @@ function initFallingText() {
             highlightClass: 'highlighted',
             gravity: 0.40,
             fontSize: '1.5rem',
-            typingSpeed: 60
+            typingSpeed: Math.max(10, Math.round(typingSpeed)) // 确保最小值为10ms
         }));
+    
+        // 在文字掉落完成后显示署名（6秒后）
+        const footerInfo = document.querySelector('.footer-info');
+        if (footerInfo) {
+            setTimeout(() => {
+                footerInfo.classList.add('animate-in');
+            }, targetTotalTime);
+        }
     } catch (error) {
         console.error('Error initializing falling text:', error);
     }
@@ -649,11 +791,17 @@ function setupTabsScrollAnimation() {
 }
 
 // ============================================================================
+// Photo Gallery Scroll Animation
+// ============================================================================
+
+
+// ============================================================================
 // Black Section Scroll Animation
 // ============================================================================
 
 function setupBlackSectionAnimation() {
     const blackSection = document.querySelector('.black-section');
+    const footerInfo = document.querySelector('.footer-info');
     if (!blackSection) return;
     
     let fallingTextInitialized = false;
@@ -690,6 +838,8 @@ function setupBlackSectionAnimation() {
     // 观察黑色区域
     observer.observe(blackSection);
     
+    // 署名动画现在由 initFallingText 函数控制，在文字掉落完成后显示
+    
     // 添加滚动事件监听作为补充
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
@@ -720,5 +870,175 @@ function setupBlackSectionAnimation() {
             });
             ticking = true;
         }
+    });
+}
+
+// ============================================================================
+// Custom Cursor Setup
+// ============================================================================
+
+function setupCustomCursor() {
+    const cursor = document.getElementById('custom-cursor');
+    const ring = document.getElementById('custom-cursor-ring');
+    
+    if (!cursor || !ring) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let ringX = 0;
+    let ringY = 0;
+    
+    const moveCursor = (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // 立即更新光标点
+        cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+        
+        // 延迟更新圆环，增加流体感
+        requestAnimationFrame(() => {
+            ringX += (mouseX - ringX - 20) * 0.15;
+            ringY += (mouseY - ringY - 20) * 0.15;
+            ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        });
+    };
+    
+    const clickCursor = () => {
+        ring.classList.add('click');
+        setTimeout(() => {
+            ring.classList.remove('click');
+        }, 150);
+    };
+    
+    // 鼠标移动事件
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousedown', clickCursor);
+    
+    // 鼠标离开窗口时隐藏光标
+    document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        ring.style.opacity = '0';
+    });
+    
+    document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        ring.style.opacity = '1';
+    });
+}
+
+// ============================================================================
+// Glitch Effect Setup
+// ============================================================================
+
+function setupGlitchEffect() {
+    const title = document.querySelector('.title');
+    if (!title) return;
+    
+    // 为标题添加故障效果的数据属性
+    const titleText = title.textContent;
+    title.setAttribute('data-text', titleText);
+    
+    // 可选：启用故障效果（默认关闭，悬停时激活）
+    // title.classList.add('glitch-enabled');
+}
+
+// ============================================================================
+// Landmarks Setup (地标对比区域)
+// ============================================================================
+
+function setupLandmarks() {
+    const landmarkCards = document.querySelectorAll('.landmark-card');
+    if (landmarkCards.length === 0) return;
+    
+    // 为每个地标卡片设置视差效果和滚动动画
+    landmarkCards.forEach((card, index) => {
+        const numberElement = card.querySelector('.landmark-number');
+        let offset = 0;
+        
+        // 视差效果
+        const handleScroll = () => {
+            const rect = card.getBoundingClientRect();
+            const scrollY = window.scrollY;
+            const speed = 0.15;
+            
+            // 当元素在视口内时计算视差
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                offset = (rect.top - window.innerHeight / 2) * speed;
+                if (numberElement) {
+                    numberElement.style.transform = `translateY(${offset * -1}px)`;
+                }
+            }
+        };
+                
+        // 使用 Intersection Observer 触发进入动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    card.classList.add('animate-in');
+                    // 开始视差效果
+                    window.addEventListener('scroll', handleScroll);
+                } else {
+                    // 可选：离开视口时移除动画类
+                    // card.classList.remove('animate-in');
+            }
+        });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        });
+        
+        observer.observe(card);
+        
+        // 如果卡片已经在视口内，立即触发动画
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            card.classList.add('animate-in');
+            window.addEventListener('scroll', handleScroll);
+        }
+        
+        // 图片悬停效果增强
+        const imageContainer = card.querySelector('.landmark-image-container');
+        if (imageContainer) {
+            imageContainer.addEventListener('mouseenter', () => {
+                const statusText = imageContainer.querySelector('.status-text');
+                if (statusText) {
+                    statusText.textContent = 'EXPLORING_FUTURE...';
+                }
+            });
+            
+            imageContainer.addEventListener('mouseleave', () => {
+                const statusText = imageContainer.querySelector('.status-text');
+                if (statusText) {
+                    statusText.textContent = 'TARGET_LOCKED';
+                }
+            });
+    }
+});
+}
+
+// ============================================================================
+// Landmark Tab Interaction
+// ============================================================================
+
+function setupLandmarkTab() {
+    const tabs = document.querySelectorAll('.landmark-tab');
+    
+    tabs.forEach(tab => {
+        const tabId = tab.getAttribute('data-tab');
+        const content = document.querySelector(`.landmark-tab-content[data-content="${tabId}"]`);
+        
+        if (!content) return;
+        
+        tab.addEventListener('click', () => {
+            const isActive = tab.classList.contains('active');
+            
+            if (isActive) {
+                tab.classList.remove('active');
+                content.classList.remove('active');
+            } else {
+                tab.classList.add('active');
+                content.classList.add('active');
+            }
+        });
     });
 }

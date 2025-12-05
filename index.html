@@ -30,6 +30,10 @@
 <body>
     <!-- 背景纹理 -->
     <div class="background-texture"></div>
+    
+    <!-- 自定义光标 -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <div class="custom-cursor-ring" id="custom-cursor-ring"></div>
 
     <div class="main-wrapper">
         <!-- 顶部标题区 -->
@@ -37,7 +41,7 @@
             <div class="title-wrapper">
                 <div class="title-vertical-line"></div>
                 <div class="title-content">
-                    <h1 class="title">Unveiling Shanghai</h1>
+                    <h1 class="title" data-text="Unveiling Shanghai">Unveiling Shanghai</h1>
                     <div class="subtitle-group">
                         <p class="subtitle-en">A Juxtaposed Archive of Memory</p>
                     </div>
@@ -58,10 +62,135 @@
                     -->
                     <img src="images/shanghainew.png" data-label="2024 Modern Shanghai" alt="New Shanghai Map" />
                     <img src="images/shanghaiold.png" data-label="1980s Old Shanghai" alt="Old Shanghai Map" />
-                </div>
+        </div>
             </div>
             <p class="exhibit-caption">Figure 1. The transformation of urban fabric (1980s - Present)</p>
         </div>
+
+        <!-- 地标对比区域 -->
+        <section class="landmarks-section">
+            <div class="landmarks-header">
+                <div class="landmarks-title-line"></div>
+                <div class="landmarks-title-content">
+                    <h2 class="landmarks-title">Landmarks Through Time</h2>
+                    <p class="landmarks-subtitle">Three iconic locations, two eras, one transformation</p>
+                </div>
+            </div>
+
+            <!-- 外滩 THE BUND -->
+            <div class="landmark-card" data-landmark="bund">
+                <div class="landmark-number">01</div>
+                <div class="landmark-content">
+                    <div class="landmark-image-container">
+                        <div class="landmark-image modern" style="background-image: url('shanghaiphoto/thebundnew.jpg'); background-size: 120%;"></div>
+                        <div class="landmark-image old" style="background-image: url('shanghaiphoto/thebundold.webp'); background-size: 120%;"></div>
+                        <div class="landmark-overlay">
+                            <div class="landmark-status">
+                                <span class="status-text">TARGET_LOCKED</span>
+                            </div>
+                        </div>
+                        <div class="landmark-progress"></div>
+                    </div>
+                    <div class="landmark-text">
+                        <div class="landmark-year">
+                            <span class="year-old">1940</span>
+                            <span class="year-separator">→</span>
+                            <span class="year-new">2024</span>
+                        </div>
+                        <h3 class="landmark-name">THE BUND</h3>
+                        <p class="landmark-desc">Colonial grandeur meets neon dreams.</p>
+                    </div>
+                </div>
+                <!-- Landmark Tab -->
+                <div class="landmark-tab-section">
+                    <div class="landmark-tab" data-tab="bund">
+                        <span class="landmark-tab-text">Learn More</span>
+                        <span class="landmark-tab-icon">▼</span>
+                    </div>
+                    <div class="landmark-tab-content" data-content="bund">
+                        <div class="landmark-tab-content-inner">
+                            <p>The Bund represents Shanghai's colonial past and its transformation into a modern financial hub. This iconic waterfront showcases the city's architectural evolution from the 1940s to the present day.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 陆家嘴 LUJIAZUI -->
+            <div class="landmark-card" data-landmark="lujiazui">
+                <div class="landmark-number">02</div>
+                <div class="landmark-content">
+                    <div class="landmark-image-container">
+                        <div class="landmark-image modern" style="background-image: url('shanghaiphoto/lujiazuinew.jpg')"></div>
+                        <div class="landmark-image old" style="background-image: url('shanghaiphoto/lujiazuiold.jpg')"></div>
+                        <div class="landmark-overlay">
+                            <div class="landmark-status">
+                                <span class="status-text">TARGET_LOCKED</span>
+                            </div>
+                        </div>
+                        <div class="landmark-progress"></div>
+                    </div>
+                    <div class="landmark-text">
+                        <div class="landmark-year">
+                            <span class="year-old">1940</span>
+                            <span class="year-separator">→</span>
+                            <span class="year-new">2024</span>
+                        </div>
+                        <h3 class="landmark-name">LUJIAZUI</h3>
+                        <p class="landmark-desc">From mudflats to vertical velocity.</p>
+                    </div>
+                </div>
+                <!-- Landmark Tab -->
+                <div class="landmark-tab-section">
+                    <div class="landmark-tab" data-tab="lujiazui">
+                        <span class="landmark-tab-text">Learn More</span>
+                        <span class="landmark-tab-icon">▼</span>
+                    </div>
+                    <div class="landmark-tab-content" data-content="lujiazui">
+                        <div class="landmark-tab-content-inner">
+                            <p>Lujiazui transformed from rural farmland into one of the world's most impressive skylines. This area exemplifies Shanghai's rapid urbanization and economic development since the 1940s.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 人民广场 PEOPLE SQUARE -->
+            <div class="landmark-card" data-landmark="peoplesquare">
+                <div class="landmark-number">03</div>
+                <div class="landmark-content">
+                    <div class="landmark-image-container">
+                        <div class="landmark-image modern" style="background-image: url('shanghaiphoto/peoplesquarenew.jpg')"></div>
+                        <div class="landmark-image old" style="background-image: url('shanghaiphoto/peoplesquareold.jpg')"></div>
+                        <div class="landmark-overlay">
+                            <div class="landmark-status">
+                                <span class="status-text">TARGET_LOCKED</span>
+                            </div>
+                        </div>
+                        <div class="landmark-progress"></div>
+                    </div>
+                    <div class="landmark-text">
+                        <div class="landmark-year">
+                            <span class="year-old">1940</span>
+                            <span class="year-separator">→</span>
+                            <span class="year-new">2024</span>
+                        </div>
+                        <h3 class="landmark-name">PEOPLE SQUARE</h3>
+                        <p class="landmark-desc">Consumerism across the century.</p>
+                    </div>
+                </div>
+                <!-- Landmark Tab -->
+                <div class="landmark-tab-section">
+                    <div class="landmark-tab" data-tab="peoplesquare">
+                        <span class="landmark-tab-text">Learn More</span>
+                        <span class="landmark-tab-icon">▼</span>
+                    </div>
+                    <div class="landmark-tab-content" data-content="peoplesquare">
+                        <div class="landmark-tab-content-inner">
+                            <p>People's Square has been a central gathering place in Shanghai for decades. From its historical significance to its role as a modern commercial and cultural hub, it reflects the city's changing identity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- 控制面板与叙事卡片 -->
         <div class="control-panel">
@@ -88,8 +217,8 @@
             <!-- 右侧：叙事档案卡 -->
             <div class="narrative-card">
                 <div class="card-stamp">ARCHIVE</div>
-                <div id="narrative-content" class="narrative-content">
-                    <div class="narrative-default">
+            <div id="narrative-content" class="narrative-content">
+                <div class="narrative-default">
                         <h2>Trace the Shifts</h2>
                         <p class="narrative-text">Glide across the map to peel back the concrete skyline.</p>
                         <p class="narrative-text">Beneath the steel and concrete, discover the hidden memories of the city.</p>
@@ -104,6 +233,23 @@
     <div class="black-section">
         <div class="black-section-content">
             <div id="falling-text-root"></div>
+        </div>
+        <!-- 个人信息和参考文献区域 -->
+        <div class="footer-info">
+            <div class="author-info">
+                <p class="author-name">Bowen Xiao</p>
+                <p class="author-email">xiaobowenlyf@gmail.com</p>
+            </div>
+            <div class="references-section">
+                <h4 class="references-title">References</h4>
+                <ol class="references-list">
+                    <li>Choi, H. S. (Sunny). (2016). How are public spaces sustaining cultural identities in the context of china's increasingly globally focused urban developments: using a case study of putuo in shanghai. <em>Journal of Architecture and Urbanism</em>, <em>40</em>(3), 198–205. <a href="https://doi.org/10.3846/20297955.2016.1210045" target="_blank">https://doi.org/10.3846/20297955.2016.1210045</a></li>
+                    <li>Huang, T. M. (2006). The cosmopolitan imaginary and flexible identities of global city‐regions: Articulating new cultural identities in Taipei and Shanghai. <em>Inter-Asia Cultural Studies</em>, <em>7</em>(3), 472–491. <a href="https://doi.org/10.1080/14649370600849330" target="_blank">https://doi.org/10.1080/14649370600849330</a></li>
+                    <li>Jiang, Y., Waley, P., & Gonzalez, S. (2018). "Nice apartments, no jobs": How former villagers experienced displacement and resettlement in the western suburbs of Shanghai. <em>Urban Studies</em>, <em>55</em>(14), 3202–3217. <a href="https://doi.org/10.1177/0042098017740246" target="_blank">https://doi.org/10.1177/0042098017740246</a></li>
+                    <li>Song, Y.-L., Chiang, N. L.-H., & Li, S. M. (2012). The Place Attachment of Residents Displaced by Urban Redevelopment Projects in Shanghai. <em>Issues & Studies</em>, <em>48</em>(3), 43–73.</li>
+                    <li>Xu, F. (2020). "Pudong Is Not My Shanghai": Displacement, Place‐Identity, and Right to the "City" in Urban China. <em>City & Community</em>, <em>19</em>(2), 330–351. <a href="https://doi.org/10.1111/cico.12491" target="_blank">https://doi.org/10.1111/cico.12491</a></li>
+                </ol>
+            </div>
         </div>
     </div>
 
