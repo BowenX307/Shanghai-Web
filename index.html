@@ -35,6 +35,24 @@
     <div class="custom-cursor" id="custom-cursor"></div>
     <div class="custom-cursor-ring" id="custom-cursor-ring"></div>
 
+    <!-- Navigation Modal -->
+    <div class="navigation-modal" id="navigation-modal">
+        <div class="navigation-modal-content">
+            <button class="navigation-modal-close" id="modal-close" aria-label="Close">×</button>
+            <h2>How to Navigate</h2>
+            <ul class="navigation-modal-instructions">
+                <li><strong>Scroll</strong> to navigate through time and explore different sections of the archive.</li>
+                <li><strong>Hover</strong> over images for historical details and visual transformations.</li>
+                <li><strong>Click</strong> on highlighted terms and region tabs to read residents' stories and learn about the resettlement policy's impact.</li>
+                <li><strong>Drag</strong> the slider on the map comparison to see Shanghai's transformation from 1980s to present.</li>
+            </ul>
+            <div class="navigation-modal-checkbox-wrapper">
+                <input type="checkbox" id="dont-show-again">
+                <label for="dont-show-again">Don't show this again</label>
+            </div>
+        </div>
+    </div>
+
     <div class="main-wrapper">
         <!-- 顶部标题区 -->
         <header class="archive-header">
@@ -74,6 +92,7 @@
                 <div class="landmarks-title-content">
                     <h2 class="landmarks-title">Landmarks Through Time</h2>
                     <p class="landmarks-subtitle">Three iconic locations, two eras, one transformation</p>
+                    <p class="landmarks-context-note">Why 1940? This year represents the peak of the Longtang era. Built largely between the 1870s and 1930s, these lane houses defined Shanghai's landscape and social culture before the massive waves of modern urbanization and skyscraper construction began.</p>
                 </div>
             </div>
 
@@ -93,7 +112,7 @@
                     </div>
                     <div class="landmark-text">
                         <div class="landmark-year">
-                            <span class="year-old">1940</span>
+                            <span class="year-old" data-tooltip="Why 1940? This year represents the peak of the Longtang era. Built largely between the 1870s and 1930s, these lane houses defined Shanghai's landscape and social culture before the massive waves of modern urbanization and skyscraper construction began.">1940</span>
                             <span class="year-separator">→</span>
                             <span class="year-new">2024</span>
                         </div>
@@ -119,7 +138,7 @@
                     </div>
                     <div class="landmark-text">
                         <div class="landmark-year">
-                            <span class="year-old">1940</span>
+                            <span class="year-old" data-tooltip="Why 1940? This year represents the peak of the Longtang era. Built largely between the 1870s and 1930s, these lane houses defined Shanghai's landscape and social culture before the massive waves of modern urbanization and skyscraper construction began.">1940</span>
                             <span class="year-separator">→</span>
                             <span class="year-new">2024</span>
                         </div>
@@ -145,7 +164,7 @@
                     </div>
                     <div class="landmark-text">
                         <div class="landmark-year">
-                            <span class="year-old">1940</span>
+                            <span class="year-old" data-tooltip="Why 1940? This year represents the peak of the Longtang era. Built largely between the 1870s and 1930s, these lane houses defined Shanghai's landscape and social culture before the massive waves of modern urbanization and skyscraper construction began.">1940</span>
                             <span class="year-separator">→</span>
                             <span class="year-new">2024</span>
                         </div>
@@ -171,7 +190,7 @@
                     <span class="region-name">Lost Identities</span>
                 </div>
                 <div class="region-bar" data-region="nice-apartment-trap">
-                    <span class="region-name">The "Nice Apartment" Trap</span>
+                    <span class="region-name">Nice Apartments, No Jobs</span>
                 </div>
                 <div class="region-bar" data-region="concrete-vs-community">
                     <span class="region-name">Concrete vs. Community</span>

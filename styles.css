@@ -703,14 +703,18 @@ div.jx-image div.jx-label *,
 }
 
 .quote {
-    border-left: 3px solid var(--vintage-gold);
-    padding-left: 20px;
+    border-left: 4px solid var(--shanghai-red);
+    padding-left: 25px;
     margin: 30px 0;
     font-style: italic;
-    color: #555;
-    font-size: 1.2rem;
-    background: rgba(197, 160, 89, 0.05); /* Light Gold BG */
-    padding: 15px 20px;
+    color: var(--ink-black);
+    font-size: 1.4rem;
+    background: rgba(142, 32, 32, 0.08); /* Light red BG */
+    padding: 20px 25px;
+    font-weight: 500;
+    font-family: var(--font-serif-en);
+    line-height: 1.6;
+    box-shadow: 0 2px 8px rgba(142, 32, 32, 0.1);
 }
 
 .citation {
@@ -767,6 +771,20 @@ div.jx-image div.jx-label *,
     font-size: 1.1rem;
     color: #666;
     font-style: normal;
+    margin-bottom: 15px;
+}
+
+.landmarks-context-note {
+    font-family: var(--font-serif-en);
+    font-size: 0.95rem;
+    color: #777;
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 15px;
+    padding: 15px 20px;
+    background: rgba(197, 160, 89, 0.08);
+    border-left: 3px solid var(--vintage-gold);
+    max-width: 800px;
 }
 
 .landmark-card {
@@ -1359,6 +1377,202 @@ div.jx-image div.jx-label *,
 }
 
 /* =========================================
+   17. Tooltip Styling (Why 1940?)
+   ========================================= */
+.year-old {
+    position: relative;
+    cursor: help;
+}
+
+.year-old[data-tooltip]:hover::after,
+.year-old[data-tooltip].tooltip-active::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: var(--font-serif-en);
+    line-height: 1.5;
+    white-space: normal;
+    width: 280px;
+    z-index: 1000;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    animation: tooltipFadeIn 0.3s ease forwards;
+}
+
+.year-old[data-tooltip]:hover::before,
+.year-old[data-tooltip].tooltip-active::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.95);
+    z-index: 1001;
+    margin-bottom: 2px;
+    opacity: 0;
+    animation: tooltipFadeIn 0.3s ease forwards;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* =========================================
+   18. Navigation Modal/Overlay
+   ========================================= */
+.navigation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    backdrop-filter: blur(5px);
+}
+
+.navigation-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.navigation-modal-content {
+    background: var(--bg-paper);
+    padding: 50px 60px;
+    max-width: 600px;
+    width: 90%;
+    border: 3px solid var(--shanghai-red);
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.navigation-modal.active .navigation-modal-content {
+    transform: scale(1);
+}
+
+.navigation-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 2px solid var(--shanghai-red);
+    color: var(--shanghai-red);
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-family: var(--font-sans);
+}
+
+.navigation-modal-close:hover {
+    background: var(--shanghai-red);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.navigation-modal h2 {
+    font-family: var(--font-display), serif;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    color: var(--ink-black);
+    border-bottom: 3px solid var(--shanghai-red);
+    padding-bottom: 15px;
+}
+
+.navigation-modal-instructions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation-modal-instructions li {
+    margin-bottom: 20px;
+    padding-left: 40px;
+    position: relative;
+    font-family: var(--font-serif-en);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--ink-black);
+}
+
+.navigation-modal-instructions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--shanghai-red);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navigation-modal-instructions strong {
+    color: var(--shanghai-red);
+    font-weight: 600;
+}
+
+.navigation-modal-checkbox-wrapper {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-serif-en);
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.navigation-modal-checkbox-wrapper input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--shanghai-red);
+}
+
+@media (max-width: 768px) {
+    .navigation-modal-content {
+        padding: 40px 30px;
+    }
+    
+    .navigation-modal h2 {
+        font-size: 2rem;
+    }
+    
+    .navigation-modal-instructions li {
+        font-size: 1rem;
+        padding-left: 35px;
+    }
+}
+
+/* =========================================
    16. Landmark Reveal Component (Juxtaposition/Reveal)
    ========================================= */
 
@@ -1395,6 +1609,61 @@ div.jx-image div.jx-label *,
 /* State A: Modern/Neon Style (Default) */
 .landmark-card {
     --landmark-theme: #d97706;
+}
+
+/* =========================================
+   19. Visual Theme Uniformity
+   ========================================= */
+
+/* Modern/Pudong Sections - Cool Greys/Blues */
+.landmark-card .landmark-image.modern,
+.landmark-card .landmark-image-container:hover .landmark-image.modern {
+    filter: grayscale(0) brightness(1.05) contrast(1.1);
+}
+
+.landmark-card .year-new {
+    color: #4a5568; /* Cool grey */
+}
+
+/* Longtang/1940 Sections - Warm Earth Tones */
+.landmark-card .landmark-image.old {
+    filter: grayscale(1) sepia(0.4) contrast(1.1) hue-rotate(-10deg);
+}
+
+.landmark-card .year-old {
+    color: #8b4513; /* Warm brown/earth tone */
+}
+
+/* Narrative sections with warm tones for historical content */
+.narrative-card {
+    background: #fff;
+    border-top: 4px solid var(--ink-black);
+}
+
+/* Control panel - subtle theme differentiation */
+.region-bar {
+    background: #fff;
+    border-left: 3px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.region-bar:hover {
+    border-left-color: var(--shanghai-red);
+}
+
+.region-bar.active {
+    border-left-color: var(--shanghai-red);
+    background: #fafafa;
+}
+
+/* Map section - modern theme */
+.exhibit-container {
+    background: linear-gradient(to bottom, rgba(200, 220, 240, 0.05), transparent);
+}
+
+/* Landmarks section - warm historical theme */
+.landmarks-section {
+    background: linear-gradient(to bottom, transparent, rgba(244, 241, 234, 0.5), transparent);
 }
 
 .landmark-card .landmark-name {

@@ -27,17 +27,18 @@ const narrativeData = {
         title: 'Lost Identities',
         content: `
             <p class="narrative-text"><strong>Vanishing History:</strong> The Longtang (alleyway houses)—a unique blend of Chinese and Western architecture—defined Shanghai's soul for decades. Now, they are largely memories buried under fresh rubble.</p>
+            <p class="narrative-text"><strong>What is Being Lost:</strong> We are losing the Longtang (lane houses), built between the 1870s and 1930s. These were not just buildings; they were maze-like structures that combined Chinese and Western influences, fostering a unique social fabric. For the elderly, these are memories; for Gen Z, they are becoming nothing but imagination covered by fresh rubble.</p>
             <div class="quote">
                 "Pudong is not my Shanghai."
             </div>
-            <p class="narrative-text"><strong>The Sentiment:</strong> Their heartbreak is captured in a single phrase: "Pudong is not my Shanghai". A "home" is a social fabric, not just plumbing and walls; when we erase the landscape, we erase the identity attached to it.</p>
+            <p class="narrative-text"><strong>The Emotional Cost:</strong> Sociologist Fang Xu captured this sentiment. Residents feel a profound sense of alienation, calling these new high-rises 'inauthentic' despite better plumbing. They lose the 'bargaining place attachment'—the daily social negotiations that make a place feel like home.</p>
         `
     },
     'nice-apartment-trap': {
-        title: 'The "Nice Apartment" Trap',
+        title: 'Nice Apartments, No Jobs',
         content: `
-            <p class="narrative-text"><strong>The Trade-off:</strong> Resettlement policies offer a "nice apartment" and a one-time cash payout. But a one-time payment is not a livelihood.</p>
-            <p class="narrative-text"><strong>Marginalization:</strong> Many residents are pushed to the suburban edges, far from the city center's economic hub. This is "geographical marginalization".</p>
+            <p class="narrative-text"><strong>Defining the Policy:</strong> At the heart of Shanghai's rapid change is the 'resettlement' strategy. In essence, this plan sought to replace outdated housing with contemporary, easily accessible communities, offering residents new apartments and monetary compensation in return for moving. While officials argue this is a necessary sacrifice, it ignores the profound human costs hidden beneath.</p>
+            <p class="narrative-text"><strong>The Economic Cost:</strong> Research shows that relocation often leads to 'geographical marginalization'. Residents are moved to suburbs far from job hubs, destroying their long-term economic foundations and informal economies. A one-time cash payment is not a sustainable livelihood.</p>
             <p class="narrative-text"><strong>The Reality:</strong> For the lower class, this isn't an upgrade; it is the destruction of stable economic foundations and the loss of affordable living. We are handing people keys to a new house while taking away their means to survive.</p>
         `
     },
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCustomCursor();
     setupGlitchEffect();
     setupLandmarks();
+    setupNavigationModal();
 });
 
 // 强制应用 JuxtaposeJS 标签样式
@@ -942,10 +944,87 @@ function setupGlitchEffect() {
 }
 
 // ============================================================================
+// Navigation Modal Setup
+// ============================================================================
+
+function setupNavigationModal() {
+    const modal = document.getElementById('navigation-modal');
+    const closeBtn = document.getElementById('modal-close');
+    const dontShowCheckbox = document.getElementById('dont-show-again');
+    
+    if (!modal) return;
+    
+    // Check if user has previously dismissed the modal
+    const dontShowAgain = localStorage.getItem('navigation-modal-dismissed');
+    
+    if (!dontShowAgain) {
+        // Show modal after a short delay
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 500);
+    }
+    
+    // Close button handler
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            closeModal();
+        });
+    }
+    
+    // Click outside modal to close
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Escape key to close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+    
+    function closeModal() {
+        modal.classList.remove('active');
+        
+        // If checkbox is checked, save preference
+        if (dontShowCheckbox && dontShowCheckbox.checked) {
+            localStorage.setItem('navigation-modal-dismissed', 'true');
+        }
+    }
+}
+
+// ============================================================================
 // Landmarks Setup (地标对比区域)
 // ============================================================================
 
 function setupLandmarks() {
+    // Setup tooltip for mobile devices
+    const yearOldElements = document.querySelectorAll('.year-old[data-tooltip]');
+    yearOldElements.forEach(element => {
+        // Touch devices: tap to show/hide tooltip
+        element.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isActive = this.classList.contains('tooltip-active');
+            
+            // Remove active class from all tooltips
+            yearOldElements.forEach(el => el.classList.remove('tooltip-active'));
+            
+            // Toggle this tooltip
+            if (!isActive) {
+                this.classList.add('tooltip-active');
+                // Close on outside click
+                setTimeout(() => {
+                    document.addEventListener('click', function closeTooltip() {
+                        this.classList.remove('tooltip-active');
+                        document.removeEventListener('click', closeTooltip);
+                    }.bind(this), { once: true });
+                }, 100);
+            }
+        });
+    });
+    
     const landmarkCards = document.querySelectorAll('.landmark-card');
     if (landmarkCards.length === 0) return;
     
